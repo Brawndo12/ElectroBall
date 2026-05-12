@@ -16,7 +16,8 @@ public class PlayerController2D : MonoBehaviour
 
     [Header("Action Dash")]
     [SerializeField] private float dashForce = 13f;
-    [SerializeField] private float dashCooldown = 0.35f;
+    [SerializeField] private float dashCooldown = 0.1f;
+    [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashVelocityLimit = 16f;
 
     [Header("Ground Check")]
@@ -29,6 +30,9 @@ public class PlayerController2D : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private float nextDashTime;
+    private float dashEndTime;
+
+    private bool IsDashing => Time.time < dashEndTime;
 
     private void Awake()
     {
@@ -39,14 +43,14 @@ public class PlayerController2D : MonoBehaviour
     {
         ReadInput();
 
-        if (IsActionPressed() && Time.time >= nextDashTime)
+        if (IsActionPressedThisFrame() && Time.time >= nextDashTime)
             ActionDash();
     }
 
     private void FixedUpdate()
     {
         MoveHorizontally();
-        ClampDashSpeed();
+        ClampSpeed();
     }
 
     private void ReadInput()
@@ -72,9 +76,12 @@ public class PlayerController2D : MonoBehaviour
         float accelRate = hasInput ? acceleration : deceleration;
         float control = IsGrounded() ? 1f : airControlMultiplier;
 
+        if (IsDashing)
+            control *= 0.25f;
+
         rb.AddForce(Vector2.right * speedDifference * accelRate * control);
 
-        if (Mathf.Abs(rb.velocity.x) > moveSpeed && !IsActionPressed())
+        if (!IsDashing && Mathf.Abs(rb.velocity.x) > moveSpeed)
         {
             rb.velocity = new Vector2(
                 Mathf.Sign(rb.velocity.x) * moveSpeed,
@@ -86,6 +93,7 @@ public class PlayerController2D : MonoBehaviour
     private void ActionDash()
     {
         nextDashTime = Time.time + dashCooldown;
+        dashEndTime = Time.time + dashDuration;
 
         Vector2 dashDirection = new Vector2(horizontalInput, verticalInput);
 
@@ -94,11 +102,23 @@ public class PlayerController2D : MonoBehaviour
 
         dashDirection.Normalize();
 
+        if (dashDirection.y > 0.01f)
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(dashDirection * dashForce, ForceMode2D.Impulse);
     }
 
-    private void ClampDashSpeed()
+    private void ClampSpeed()
     {
+        float limit = IsDashing ? dashVelocityLimit : moveSpeed;
+
+        if (Mathf.Abs(rb.velocity.x) > limit)
+        {
+            rb.velocity = new Vector2(
+                Mathf.Sign(rb.velocity.x) * limit,
+                rb.velocity.y
+            );
+        }
+
         if (rb.velocity.magnitude > dashVelocityLimit)
             rb.velocity = rb.velocity.normalized * dashVelocityLimit;
     }
@@ -111,7 +131,7 @@ public class PlayerController2D : MonoBehaviour
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
-    private bool IsActionPressed()
+    private bool IsActionPressedThisFrame()
     {
         return playerNumber == PlayerNumber.Player1
             ? Input.GetKeyDown(KeyCode.Space)

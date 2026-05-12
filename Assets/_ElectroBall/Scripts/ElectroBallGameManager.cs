@@ -15,6 +15,12 @@ public class ElectroBallGameManager : MonoBehaviour
     [SerializeField] private Transform player2Spawn;
     [SerializeField] private Transform ballSpawn;
 
+    [Header("UI")]
+    [SerializeField] private ScoreUI scoreUI;
+
+    [Header("Effects")]
+    [SerializeField] private LightningZapEffect lightningZapEffect;
+
     [Header("Scoring")]
     [SerializeField] private int player1Score;
     [SerializeField] private int player2Score;
@@ -37,6 +43,11 @@ public class ElectroBallGameManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        scoreUI?.UpdateScore(player1Score, player2Score);
+    }
+
     public void GoalScored(int scoringPlayer)
     {
         if (roundResetting) return;
@@ -45,6 +56,12 @@ public class ElectroBallGameManager : MonoBehaviour
             player1Score++;
         else
             player2Score++;
+
+        scoreUI?.UpdateScore(player1Score, player2Score);
+        scoreUI?.ShowGoalMessage(scoringPlayer);
+
+        Transform losingPlayer = scoringPlayer == 1 ? player2 : player1;
+        lightningZapEffect?.Zap(losingPlayer);
 
         Debug.Log($"Player 1: {player1Score} | Player 2: {player2Score}");
 
@@ -74,6 +91,21 @@ public class ElectroBallGameManager : MonoBehaviour
     {
         player1.position = player1Spawn.position;
         player2.position = player2Spawn.position;
+
+        Rigidbody2D player1Rb = player1.GetComponent<Rigidbody2D>();
+        Rigidbody2D player2Rb = player2.GetComponent<Rigidbody2D>();
+
+        if (player1Rb != null)
+        {
+            player1Rb.velocity = Vector2.zero;
+            player1Rb.angularVelocity = 0f;
+        }
+
+        if (player2Rb != null)
+        {
+            player2Rb.velocity = Vector2.zero;
+            player2Rb.angularVelocity = 0f;
+        }
 
         ballRb.position = ballSpawn.position;
         ballRb.velocity = Vector2.zero;

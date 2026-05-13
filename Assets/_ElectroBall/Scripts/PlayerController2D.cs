@@ -8,31 +8,53 @@ public class PlayerController2D : MonoBehaviour
     [Header("Player")]
     [SerializeField] private PlayerNumber playerNumber;
 
-    [Header("Horizontal Movement")]
+    [Header("Movement")]
     [SerializeField] private float moveSpeed = 7f;
-    [SerializeField] private float acceleration = 65f;
-    [SerializeField] private float deceleration = 85f;
-    [SerializeField] private float airControlMultiplier = 0.7f;
+    [SerializeField] private float groundAcceleration = 60f;
+    [SerializeField] private float groundDeceleration = 60f;
+    [SerializeField] private float airAcceleration = 18f;
+    [SerializeField] private float airDeceleration = 6f;
+    [SerializeField] private float airTurnAcceleration = 12f;
 
-    [Header("Action Dash")]
-    [SerializeField] private float dashForce = 13f;
+    [Header("Dash")]
+    [SerializeField] private float dashSpeed = 14f;
     [SerializeField] private float dashCooldown = 0.1f;
-    [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashVelocityLimit = 16f;
+    [SerializeField] private float dashDuration = 0.18f;
+
+    [Header("Jump")]
+    [SerializeField] private float jumpMultiplier = 0.75f;
+
+    [Header("Slide")]
+    [SerializeField] private float slideSpeed = 11f;
+    [SerializeField] private float slideDuration = 0.28f;
+
+    [Header("Speed Limits")]
+    [SerializeField] private float maxNonDashHorizontalSpeed = 7f;
+    [SerializeField] private float maxOverallSpeed = 18f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.15f;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Ball Lift")]
+    [SerializeField] private float ballLiftRadius = 1.1f;
+    [SerializeField] private Vector2 ballLiftOffset = new Vector2(0.3f, 0.8f);
+
     private Rigidbody2D rb;
 
     private float horizontalInput;
     private float verticalInput;
-    private float nextDashTime;
+
+    private float nextActionTime;
     private float dashEndTime;
+    private float slideEndTime;
+
+    private int facingDirection = 1;
+    private bool wasGrounded;
 
     private bool IsDashing => Time.time < dashEndTime;
+    private bool IsSliding => Time.time < slideEndTime;
 
     private void Awake()
     {
@@ -42,9 +64,17 @@ public class PlayerController2D : MonoBehaviour
     private void Update()
     {
         ReadInput();
+        UpdateFacingDirection();
 
-        if (IsActionPressedThisFrame() && Time.time >= nextDashTime)
-            ActionDash();
+        bool grounded = IsGrounded();
+
+        if (IsSliding && !grounded && wasGrounded)
+            GroundJump();
+
+        if (IsActionPressedThisFrame() && Time.time >= nextActionTime)
+            HandleAction(grounded);
+
+        wasGrounded = grounded;
     }
 
     private void FixedUpdate()
@@ -67,34 +97,104 @@ public class PlayerController2D : MonoBehaviour
         }
     }
 
+    private void UpdateFacingDirection()
+    {
+        if (horizontalInput > 0.01f)
+            facingDirection = 1;
+        else if (horizontalInput < -0.01f)
+            facingDirection = -1;
+    }
+
     private void MoveHorizontally()
     {
-        float targetSpeed = horizontalInput * moveSpeed;
-        float speedDifference = targetSpeed - rb.velocity.x;
+        if (IsDashing || IsSliding)
+            return;
 
+        bool grounded = IsGrounded();
         bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
-        float accelRate = hasInput ? acceleration : deceleration;
-        float control = IsGrounded() ? 1f : airControlMultiplier;
 
-        if (IsDashing)
-            control *= 0.25f;
-
-        rb.AddForce(Vector2.right * speedDifference * accelRate * control);
-
-        if (!IsDashing && Mathf.Abs(rb.velocity.x) > moveSpeed)
+        if (grounded)
         {
-            rb.velocity = new Vector2(
-                Mathf.Sign(rb.velocity.x) * moveSpeed,
-                rb.velocity.y
+            float targetSpeed = horizontalInput * moveSpeed;
+            float speedDifference = targetSpeed - rb.velocity.x;
+
+            float accelRate = hasInput ? groundAcceleration : groundDeceleration;
+
+            rb.AddForce(Vector2.right * speedDifference * accelRate);
+            return;
+        }
+
+        // Air movement
+        if (hasInput)
+        {
+            bool turningAgainstVelocity =
+                Mathf.Abs(rb.velocity.x) > 0.1f &&
+                Mathf.Sign(horizontalInput) != Mathf.Sign(rb.velocity.x);
+
+            float accelRate = turningAgainstVelocity
+                ? airTurnAcceleration
+                : airAcceleration;
+
+            rb.AddForce(Vector2.right * horizontalInput * accelRate);
+        }
+        else
+        {
+            // Horizontal-only air damping.
+            float newX = Mathf.MoveTowards(
+                rb.velocity.x,
+                0f,
+                airDeceleration * Time.fixedDeltaTime
             );
+
+            rb.velocity = new Vector2(newX, rb.velocity.y);
         }
     }
 
-    private void ActionDash()
+    private void HandleAction(bool grounded)
     {
-        nextDashTime = Time.time + dashCooldown;
-        dashEndTime = Time.time + dashDuration;
+        nextActionTime = Time.time + dashCooldown;
 
+        if (IsSliding)
+        {
+            GroundJump();
+            return;
+        }
+
+        if (grounded)
+        {
+            if (verticalInput < -0.01f)
+                StartSlide();
+            else
+                GroundJump();
+
+            return;
+        }
+
+        AirDash();
+    }
+
+    private void GroundJump()
+    {
+        slideEndTime = 0f;
+
+        float jumpSpeed = dashSpeed * jumpMultiplier;
+
+        rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+
+        TryLiftBall(jumpSpeed);
+    }
+
+    private void StartSlide()
+    {
+        slideEndTime = Time.time + slideDuration;
+
+        int direction = GetHorizontalActionDirection();
+
+        rb.velocity = new Vector2(direction * slideSpeed, rb.velocity.y);
+    }
+
+    private void AirDash()
+    {
         Vector2 dashDirection = new Vector2(horizontalInput, verticalInput);
 
         if (dashDirection.sqrMagnitude < 0.01f)
@@ -102,25 +202,56 @@ public class PlayerController2D : MonoBehaviour
 
         dashDirection.Normalize();
 
-        if (dashDirection.y > 0.01f)
-            rb.velocity = new Vector2(rb.velocity.x, 0f);
-        rb.AddForce(dashDirection * dashForce, ForceMode2D.Impulse);
+        dashEndTime = Time.time + dashDuration;
+
+        rb.velocity = dashDirection * dashSpeed;
+    }
+
+    private int GetHorizontalActionDirection()
+    {
+        if (horizontalInput > 0.01f)
+            return 1;
+
+        if (horizontalInput < -0.01f)
+            return -1;
+
+        return facingDirection;
+    }
+
+    private void TryLiftBall(float jumpSpeed)
+    {
+        GameObject ball = GameObject.FindGameObjectWithTag("Ball");
+
+        if (ball == null)
+            return;
+
+        Rigidbody2D ballRb = ball.GetComponent<Rigidbody2D>();
+
+        if (ballRb == null)
+            return;
+
+        float distance = Vector2.Distance(rb.position, ballRb.position);
+
+        if (distance > ballLiftRadius)
+            return;
+
+        Vector2 offset = new Vector2(
+            ballLiftOffset.x * facingDirection,
+            ballLiftOffset.y
+        );
+
+        ballRb.position = rb.position + offset;
+
+        ballRb.velocity = new Vector2(
+            rb.velocity.x,
+            jumpSpeed * 0.9f
+        );
     }
 
     private void ClampSpeed()
     {
-        float limit = IsDashing ? dashVelocityLimit : moveSpeed;
-
-        if (Mathf.Abs(rb.velocity.x) > limit)
-        {
-            rb.velocity = new Vector2(
-                Mathf.Sign(rb.velocity.x) * limit,
-                rb.velocity.y
-            );
-        }
-
-        if (rb.velocity.magnitude > dashVelocityLimit)
-            rb.velocity = rb.velocity.normalized * dashVelocityLimit;
+        if (rb.velocity.magnitude > maxOverallSpeed)
+            rb.velocity = rb.velocity.normalized * maxOverallSpeed;
     }
 
     private bool IsGrounded()
@@ -128,7 +259,11 @@ public class PlayerController2D : MonoBehaviour
         if (groundCheck == null)
             return false;
 
-        return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        return Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            groundLayer
+        );
     }
 
     private bool IsActionPressedThisFrame()
@@ -150,8 +285,12 @@ public class PlayerController2D : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (groundCheck == null) return;
+        if (groundCheck != null)
+            Gizmos.DrawWireSphere(
+                groundCheck.position,
+                groundCheckRadius
+            );
 
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        Gizmos.DrawWireSphere(transform.position, ballLiftRadius);
     }
 }

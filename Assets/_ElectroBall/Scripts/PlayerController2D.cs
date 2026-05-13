@@ -11,10 +11,8 @@ public class PlayerController2D : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float groundAcceleration = 60f;
-    [SerializeField] private float groundDeceleration = 60f;
-    [SerializeField] private float airAcceleration = 18f;
-    [SerializeField] private float airDeceleration = 6f;
-    [SerializeField] private float airTurnAcceleration = 12f;
+    [SerializeField] private float airAcceleration = 8f;
+    [SerializeField] private float airNoInputSlowdown = 3f;
 
     [Header("Dash")]
     [SerializeField] private float dashSpeed = 14f;
@@ -113,41 +111,20 @@ public class PlayerController2D : MonoBehaviour
         bool grounded = IsGrounded();
         bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
 
-        if (grounded)
-        {
-            float targetSpeed = horizontalInput * moveSpeed;
-            float speedDifference = targetSpeed - rb.velocity.x;
+        float currentX = rb.velocity.x;
+        float targetX = hasInput ? horizontalInput * moveSpeed : 0f;
 
-            float accelRate = hasInput ? groundAcceleration : groundDeceleration;
+        float accel = grounded
+            ? groundAcceleration
+            : hasInput ? airAcceleration : airNoInputSlowdown;
 
-            rb.AddForce(Vector2.right * speedDifference * accelRate);
-            return;
-        }
+        float newX = Mathf.MoveTowards(
+            currentX,
+            targetX,
+            accel * Time.fixedDeltaTime
+        );
 
-        // Air movement
-        if (hasInput)
-        {
-            bool turningAgainstVelocity =
-                Mathf.Abs(rb.velocity.x) > 0.1f &&
-                Mathf.Sign(horizontalInput) != Mathf.Sign(rb.velocity.x);
-
-            float accelRate = turningAgainstVelocity
-                ? airTurnAcceleration
-                : airAcceleration;
-
-            rb.AddForce(Vector2.right * horizontalInput * accelRate);
-        }
-        else
-        {
-            // Horizontal-only air damping.
-            float newX = Mathf.MoveTowards(
-                rb.velocity.x,
-                0f,
-                airDeceleration * Time.fixedDeltaTime
-            );
-
-            rb.velocity = new Vector2(newX, rb.velocity.y);
-        }
+        rb.velocity = new Vector2(newX, rb.velocity.y);
     }
 
     private void HandleAction(bool grounded)

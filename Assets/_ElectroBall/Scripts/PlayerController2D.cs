@@ -37,7 +37,9 @@ public class PlayerController2D : MonoBehaviour
 
     [Header("Ball Lift")]
     [SerializeField] private float ballLiftRadius = 1.1f;
-    [SerializeField] private Vector2 ballLiftOffset = new Vector2(0.3f, 0.8f);
+    [SerializeField] private float ballLiftHorizontalOffset = 0.35f;
+    [SerializeField] private float ballLiftHorizontalLerp = 0.35f;
+    [SerializeField] private float ballLiftVelocityMultiplier = 0.9f;
 
     private Rigidbody2D rb;
 
@@ -212,16 +214,19 @@ public class PlayerController2D : MonoBehaviour
         if (distance > ballLiftRadius)
             return;
 
-        Vector2 offset = new Vector2(
-            ballLiftOffset.x * facingDirection,
-            ballLiftOffset.y
+        float targetX = rb.position.x + ballLiftHorizontalOffset * facingDirection;
+
+        float newX = Mathf.Lerp(
+            ballRb.position.x,
+            targetX,
+            ballLiftHorizontalLerp
         );
 
-        ballRb.position = rb.position + offset;
+        ballRb.position = new Vector2(newX, ballRb.position.y);
 
         ballRb.velocity = new Vector2(
             rb.velocity.x,
-            jumpSpeed * 0.9f
+            jumpSpeed * ballLiftVelocityMultiplier
         );
     }
 

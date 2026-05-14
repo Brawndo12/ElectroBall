@@ -904,10 +904,10 @@ MonoBehaviour:
   groundAcceleration: 120
   airAcceleration: 18
   airNoInputSlowdown: 3
-  dashSpeed: 20
-  dashCooldown: 0.1
-  dashDuration: 0.15
-  jumpMultiplier: 0.75
+  dashSpeed: 18
+  dashCooldown: 0.02
+  dashDuration: 0.8
+  jumpMultiplier: 0.6
   slideSpeed: 11
   slideDuration: 0.28
   maxNonDashHorizontalSpeed: 7
@@ -918,7 +918,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   ballLiftRadius: 1.1
-  ballLiftOffset: {x: 0.3, y: 0.8}
+  ballLiftHorizontalOffset: 0.35
+  ballLiftHorizontalLerp: 0.35
+  ballLiftVelocityMultiplier: 0.9
 --- !u!58 &463032338
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -991,7 +993,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.29, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1459969116}
@@ -2010,10 +2012,10 @@ MonoBehaviour:
   groundAcceleration: 120
   airAcceleration: 18
   airNoInputSlowdown: 3
-  dashSpeed: 20
-  dashCooldown: 0.1
-  dashDuration: 0.15
-  jumpMultiplier: 0.75
+  dashSpeed: 18
+  dashCooldown: 0.02
+  dashDuration: 0.8
+  jumpMultiplier: 0.6
   slideSpeed: 11
   slideDuration: 0.28
   maxNonDashHorizontalSpeed: 7
@@ -2024,7 +2026,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   ballLiftRadius: 1.1
-  ballLiftOffset: {x: 0.3, y: 0.8}
+  ballLiftHorizontalOffset: 0.35
+  ballLiftHorizontalLerp: 0.35
+  ballLiftVelocityMultiplier: 0.9
 --- !u!58 &1121941241
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2097,7 +2101,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.4, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 175209711}
@@ -2260,7 +2264,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

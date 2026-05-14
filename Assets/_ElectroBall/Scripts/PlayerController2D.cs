@@ -49,6 +49,8 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] private float ballLiftVelocityMultiplier = 0.9f;
     */
 
+    [SerializeField] private VisualSettings visualSettings;
+
     private Rigidbody2D rb;
 
     private float horizontalInput;
@@ -215,7 +217,7 @@ public class PlayerController2D : MonoBehaviour
             return;
 
         if (activeBubble != null)
-            Destroy(activeBubble.gameObject);
+            activeBubble.BeginFade();
 
         GameObject bubbleObject = Instantiate(
             settings.dashBubblePrefab,
@@ -228,11 +230,16 @@ public class PlayerController2D : MonoBehaviour
         if (activeBubble == null)
             activeBubble = bubbleObject.AddComponent<DashBubble>();
 
+        Color bubbleColor = playerNumber == PlayerNumber.Player1
+            ? visualSettings.player1Color : visualSettings.player2Color;
+
         activeBubble.Initialize(
             settings.bubbleDiameter,
             settings.bubbleGrowthTime,
             settings.bubbleLifetime,
-            settings.bubbleBallImpulse
+            settings.bubbleBallImpulse,
+            settings.bubblePopFadeTime,
+            bubbleColor
         );
     }
 

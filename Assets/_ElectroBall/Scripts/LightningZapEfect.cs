@@ -9,6 +9,7 @@ public class LightningZapEffect : MonoBehaviour
     [SerializeField] private float duration = 0.35f;
     [SerializeField] private float jitterAmount = 0.25f;
     [SerializeField] private int segments = 8;
+    [SerializeField] private VisualSettings visualSettings;
 
     private LineRenderer lineRenderer;
     private Coroutine zapRoutine;
@@ -18,6 +19,12 @@ public class LightningZapEffect : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.enabled = false;
         lineRenderer.positionCount = segments + 1;
+
+        if (visualSettings != null)
+        {
+            lineRenderer.startColor = visualSettings.electricityColor;
+            lineRenderer.endColor = visualSettings.electricityColor;
+        }
     }
 
     public void Zap(Transform target)

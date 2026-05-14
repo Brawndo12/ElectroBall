@@ -21,6 +21,7 @@ public class PlayerMovementSettings : ScriptableObject
     public GameObject dashBubblePrefab;
     public float bubbleDiameter = 2.2f;
     public float bubbleGrowthTime = 0.12f;
+    public float bubblePopFadeTime = 0.2f;
     public float bubbleLifetime = 1.5f;
     public float bubbleBallImpulse = 5f;
 

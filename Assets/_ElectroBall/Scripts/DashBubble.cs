@@ -10,73 +10,67 @@ public class DashBubble : MonoBehaviour
     private float growthTime;
     private float lifetime;
     private float ballImpulse;
+    private float fadeTime;
 
     private float timer;
+    private float fadeTimer;
+
+    private bool isFading;
 
     public void Initialize(
         float diameter,
         float growTime,
         float existTime,
-        float impulse
-    )
+        float impulse,
+        float popFadeTime,
+        Color bubbleColor
+        )
     {
         targetDiameter = diameter;
         growthTime = growTime;
         lifetime = existTime;
         ballImpulse = impulse;
+        fadeTime = popFadeTime;
 
         bubbleCollider = GetComponent<CircleCollider2D>();
         bubbleCollider.isTrigger = true;
-        bubbleCollider.radius = 0f;
+        bubbleCollider.radius = 0.5f;
+        bubbleCollider.enabled = true;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+            spriteRenderer.color = bubbleColor;
 
         transform.localScale = Vector3.zero;
     }
 
     private void Update()
     {
+        if (isFading)
+        {
+            UpdateFade();
+            return;
+        }
+
         timer += Time.deltaTime;
 
         float growPercent = growthTime <= 0f
             ? 1f
             : Mathf.Clamp01(timer / growthTime);
 
-        float currentDiameter = targetDiameter * growPercent;
-
-        transform.localScale = Vector3.one * currentDiameter;
-        bubbleCollider.radius = 0.5f;
-
-        if (spriteRenderer != null)
-        {
-            Color color = spriteRenderer.color;
-            color.a = Mathf.Lerp(0.35f, 0f, timer / lifetime);
-            spriteRenderer.color = color;
-        }
+        transform.localScale = Vector3.one * (targetDiameter * growPercent);
 
         if (timer >= lifetime)
-            Destroy(gameObject);
+            BeginFade();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        TryHitBall(other);
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        TryHitBall(other);
-    }
-
-    private void TryHitBall(Collider2D other)
-    {
-        if (!other.CompareTag("Ball"))
-            return;
+        if (isFading) return;
+        if (!other.CompareTag("Ball")) return;
 
         Rigidbody2D ballRb = other.attachedRigidbody;
-
-        if (ballRb == null)
-            return;
+        if (ballRb == null) return;
 
         Vector2 direction = (ballRb.position - (Vector2)transform.position).normalized;
 
@@ -84,5 +78,37 @@ public class DashBubble : MonoBehaviour
             direction = Vector2.up;
 
         ballRb.AddForce(direction * ballImpulse, ForceMode2D.Impulse);
+
+        BeginFade();
+    }
+
+    public void BeginFade()
+    {
+        if (isFading) return;
+
+        isFading = true;
+        fadeTimer = 0f;
+
+        if (bubbleCollider != null)
+            bubbleCollider.enabled = false;
+    }
+
+    private void UpdateFade()
+    {
+        fadeTimer += Time.deltaTime;
+
+        float fadePercent = fadeTime <= 0f
+            ? 1f
+            : Mathf.Clamp01(fadeTimer / fadeTime);
+
+        if (spriteRenderer != null)
+        {
+            Color color = spriteRenderer.color;
+            color.a = Mathf.Lerp(color.a, 0f, fadePercent);
+            spriteRenderer.color = color;
+        }
+
+        if (fadePercent >= 1f)
+            Destroy(gameObject);
     }
 }

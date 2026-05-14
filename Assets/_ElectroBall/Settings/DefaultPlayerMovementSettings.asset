@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a7c42dd5290994db3833aac09baed0, type: 3}
+  m_Name: DefaultPlayerMovementSettings
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  groundAcceleration: 60
+  airAcceleration: 9
+  airNoInputSlowdown: 3
+  dashSpeed: 10
+  dashCooldown: 0.02
+  dashDuration: 0.11
+  dashBubblePrefab: {fileID: 0}
+  bubbleDiameter: 2.2
+  bubbleGrowthTime: 0.12
+  bubbleLifetime: 1.5
+  bubbleBallImpulse: 5
+  jumpMultiplier: 0.65
+  slideSpeed: 11
+  slideDuration: 0.2
+  maxOverallSpeed: 20
+  ballLiftRadius: 0.6
+  ballLiftHorizontalOffset: 0.35
+  ballLiftHorizontalLerp: 0.35
+  ballLiftVelocityMultiplier: 1
+  groundCheckRadius: 0.15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64

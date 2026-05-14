@@ -8,6 +8,13 @@ public class PlayerController2D : MonoBehaviour
     [Header("Player")]
     [SerializeField] private PlayerNumber playerNumber;
 
+    [Header("Shared Movement Settings")]
+    [SerializeField] private PlayerMovementSettings settings;
+
+    [Header("Ground Check")]
+    [SerializeField] private Transform groundCheck;
+
+    /*
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float groundAcceleration = 60f;
@@ -40,6 +47,7 @@ public class PlayerController2D : MonoBehaviour
     [SerializeField] private float ballLiftHorizontalOffset = 0.35f;
     [SerializeField] private float ballLiftHorizontalLerp = 0.35f;
     [SerializeField] private float ballLiftVelocityMultiplier = 0.9f;
+    */
 
     private Rigidbody2D rb;
 
@@ -55,6 +63,8 @@ public class PlayerController2D : MonoBehaviour
 
     private bool IsDashing => Time.time < dashEndTime;
     private bool IsSliding => Time.time < slideEndTime;
+
+    private DashBubble activeBubble;
 
     private void Awake()
     {
@@ -114,11 +124,11 @@ public class PlayerController2D : MonoBehaviour
         bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
 
         float currentX = rb.velocity.x;
-        float targetX = hasInput ? horizontalInput * moveSpeed : 0f;
+        float targetX = hasInput ? horizontalInput * settings.moveSpeed : 0f;
 
         float accel = grounded
-            ? groundAcceleration
-            : hasInput ? airAcceleration : airNoInputSlowdown;
+            ? settings.groundAcceleration
+            : hasInput ? settings.airAcceleration : settings.airNoInputSlowdown;
 
         float newX = Mathf.MoveTowards(
             currentX,
@@ -131,7 +141,7 @@ public class PlayerController2D : MonoBehaviour
 
     private void HandleAction(bool grounded)
     {
-        nextActionTime = Time.time + dashCooldown;
+        nextActionTime = Time.time + settings.dashCooldown;
 
         if (IsSliding)
         {
@@ -156,7 +166,7 @@ public class PlayerController2D : MonoBehaviour
     {
         slideEndTime = 0f;
 
-        float jumpSpeed = dashSpeed * jumpMultiplier;
+        float jumpSpeed = settings.dashSpeed * settings.jumpMultiplier;
 
         rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
 
@@ -165,11 +175,11 @@ public class PlayerController2D : MonoBehaviour
 
     private void StartSlide()
     {
-        slideEndTime = Time.time + slideDuration;
+        slideEndTime = Time.time + settings.slideDuration;
 
         int direction = GetHorizontalActionDirection();
 
-        rb.velocity = new Vector2(direction * slideSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(direction * settings.slideSpeed, rb.velocity.y);
     }
 
     private void AirDash()
@@ -181,9 +191,11 @@ public class PlayerController2D : MonoBehaviour
 
         dashDirection.Normalize();
 
-        dashEndTime = Time.time + dashDuration;
+        dashEndTime = Time.time + settings.dashDuration;
 
-        rb.velocity = dashDirection * dashSpeed;
+        SpawnDashBubble();
+
+        rb.velocity = dashDirection * settings.dashSpeed;
     }
 
     private int GetHorizontalActionDirection()
@@ -195,6 +207,33 @@ public class PlayerController2D : MonoBehaviour
             return -1;
 
         return facingDirection;
+    }
+
+    private void SpawnDashBubble()
+    {
+        if (settings.dashBubblePrefab == null)
+            return;
+
+        if (activeBubble != null)
+            Destroy(activeBubble.gameObject);
+
+        GameObject bubbleObject = Instantiate(
+            settings.dashBubblePrefab,
+            rb.position,
+            Quaternion.identity
+        );
+
+        activeBubble = bubbleObject.GetComponent<DashBubble>();
+
+        if (activeBubble == null)
+            activeBubble = bubbleObject.AddComponent<DashBubble>();
+
+        activeBubble.Initialize(
+            settings.bubbleDiameter,
+            settings.bubbleGrowthTime,
+            settings.bubbleLifetime,
+            settings.bubbleBallImpulse
+        );
     }
 
     private void TryLiftBall(float jumpSpeed)
@@ -211,29 +250,29 @@ public class PlayerController2D : MonoBehaviour
 
         float distance = Vector2.Distance(rb.position, ballRb.position);
 
-        if (distance > ballLiftRadius)
+        if (distance > settings.ballLiftRadius)
             return;
 
-        float targetX = rb.position.x + ballLiftHorizontalOffset * facingDirection;
+        float targetX = rb.position.x + settings.ballLiftHorizontalOffset * facingDirection;
 
         float newX = Mathf.Lerp(
             ballRb.position.x,
             targetX,
-            ballLiftHorizontalLerp
+            settings.ballLiftHorizontalLerp
         );
 
         ballRb.position = new Vector2(newX, ballRb.position.y);
 
         ballRb.velocity = new Vector2(
             rb.velocity.x,
-            jumpSpeed * ballLiftVelocityMultiplier
+            jumpSpeed * settings.ballLiftVelocityMultiplier
         );
     }
 
     private void ClampSpeed()
     {
-        if (rb.velocity.magnitude > maxOverallSpeed)
-            rb.velocity = rb.velocity.normalized * maxOverallSpeed;
+        if (rb.velocity.magnitude > settings.maxOverallSpeed)
+            rb.velocity = rb.velocity.normalized * settings.maxOverallSpeed;
     }
 
     private bool IsGrounded()
@@ -243,8 +282,8 @@ public class PlayerController2D : MonoBehaviour
 
         return Physics2D.OverlapCircle(
             groundCheck.position,
-            groundCheckRadius,
-            groundLayer
+            settings.groundCheckRadius,
+            settings.groundLayer
         );
     }
 
@@ -270,9 +309,9 @@ public class PlayerController2D : MonoBehaviour
         if (groundCheck != null)
             Gizmos.DrawWireSphere(
                 groundCheck.position,
-                groundCheckRadius
+                settings.groundCheckRadius
             );
 
-        Gizmos.DrawWireSphere(transform.position, ballLiftRadius);
+        Gizmos.DrawWireSphere(transform.position, settings.ballLiftRadius);
     }
 }

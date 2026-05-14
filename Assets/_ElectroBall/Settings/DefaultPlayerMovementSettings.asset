@@ -19,10 +19,11 @@ MonoBehaviour:
   dashSpeed: 10
   dashCooldown: 0.02
   dashDuration: 0.11
-  dashBubblePrefab: {fileID: 0}
-  bubbleDiameter: 2.2
-  bubbleGrowthTime: 0.12
-  bubbleLifetime: 1.5
+  dashBubblePrefab: {fileID: 5789564604036467528, guid: 0a22864dcbb61ec4a8dba53acf19bcd4, type: 3}
+  bubbleDiameter: 1
+  bubbleGrowthTime: 0.02
+  bubblePopFadeTime: 0.5
+  bubbleLifetime: 5
   bubbleBallImpulse: 5
   jumpMultiplier: 0.65
   slideSpeed: 11

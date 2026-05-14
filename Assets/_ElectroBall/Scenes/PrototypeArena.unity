@@ -253,6 +253,136 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &24706386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 24706387}
+  - component: {fileID: 24706389}
+  - component: {fileID: 24706388}
+  m_Layer: 6
+  m_Name: PlatformWall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &24706387
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24706386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
+  m_LocalScale: {x: 5, y: 0.2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035251364}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &24706388
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24706386}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: a8284531f53a64a4f84d385bd17447ef, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
+--- !u!212 &24706389
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24706386}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &108679078
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +644,7 @@ MonoBehaviour:
   duration: 0.65
   jitterAmount: 0.25
   segments: 8
+  visualSettings: {fileID: 0}
 --- !u!120 &385639407
 LineRenderer:
   serializedVersion: 2
@@ -900,27 +1031,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 1
-  moveSpeed: 5
-  groundAcceleration: 120
-  airAcceleration: 18
-  airNoInputSlowdown: 3
-  dashSpeed: 18
-  dashCooldown: 0.02
-  dashDuration: 0.8
-  jumpMultiplier: 0.6
-  slideSpeed: 11
-  slideDuration: 0.28
-  maxNonDashHorizontalSpeed: 7
-  maxOverallSpeed: 18
+  settings: {fileID: 11400000, guid: b52ab96093b985248898b7defaf628ac, type: 2}
   groundCheck: {fileID: 1459969116}
-  groundCheckRadius: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  ballLiftRadius: 1.1
-  ballLiftHorizontalOffset: 0.35
-  ballLiftHorizontalLerp: 0.35
-  ballLiftVelocityMultiplier: 0.9
+  visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
 --- !u!58 &463032338
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -992,7 +1105,7 @@ Transform:
   m_GameObject: {fileID: 463032336}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.29, y: 0, z: 0}
+  m_LocalPosition: {x: 3.29, y: -4.27, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1969,6 +2082,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 855001258}
+  - {fileID: 24706387}
   - {fileID: 403712975}
   - {fileID: 4803795}
   - {fileID: 493542863}
@@ -2008,27 +2122,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerNumber: 0
-  moveSpeed: 5
-  groundAcceleration: 120
-  airAcceleration: 18
-  airNoInputSlowdown: 3
-  dashSpeed: 18
-  dashCooldown: 0.02
-  dashDuration: 0.8
-  jumpMultiplier: 0.6
-  slideSpeed: 11
-  slideDuration: 0.28
-  maxNonDashHorizontalSpeed: 7
-  maxOverallSpeed: 18
+  settings: {fileID: 11400000, guid: b52ab96093b985248898b7defaf628ac, type: 2}
   groundCheck: {fileID: 175209711}
-  groundCheckRadius: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  ballLiftRadius: 1.1
-  ballLiftHorizontalOffset: 0.35
-  ballLiftHorizontalLerp: 0.35
-  ballLiftVelocityMultiplier: 0.9
+  visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
 --- !u!58 &1121941241
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2100,7 +2196,7 @@ Transform:
   m_GameObject: {fileID: 1121941239}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.4, y: 0, z: 0}
+  m_LocalPosition: {x: -4.4, y: -4.26, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2239,7 +2335,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.3
+  m_Mass: 0.2
   m_LinearDrag: 0.08
   m_AngularDrag: 0.05
   m_GravityScale: 1.5

@@ -6,7 +6,6 @@ public class LightningZapEffect : MonoBehaviour
 {
     [Header("Lightning")]
     [SerializeField] private Transform lightningOrigin;
-    [SerializeField] private float duration = 0.35f;
     [SerializeField] private float jitterAmount = 0.25f;
     [SerializeField] private int segments = 8;
     [SerializeField] private VisualSettings visualSettings;
@@ -43,7 +42,7 @@ public class LightningZapEffect : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < duration)
+        while (timer < visualSettings.electrictyDuration)
         {
             DrawLightning(target);
             timer += Time.unscaledDeltaTime;

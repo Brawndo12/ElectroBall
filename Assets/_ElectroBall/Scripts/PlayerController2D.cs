@@ -126,7 +126,20 @@ public class PlayerController2D : MonoBehaviour
         bool hasInput = Mathf.Abs(horizontalInput) > 0.01f;
 
         float currentX = rb.velocity.x;
-        float targetX = hasInput ? horizontalInput * settings.moveSpeed : 0f;
+        float targetX = 0f;
+
+        if (hasInput)
+        {
+            float desiredX = horizontalInput * settings.moveSpeed;
+
+            bool alreadyMovingFasterInInputDirection =
+                Mathf.Sign(rb.velocity.x) == Mathf.Sign(horizontalInput) &&
+                Mathf.Abs(rb.velocity.x) > settings.moveSpeed;
+
+            targetX = alreadyMovingFasterInInputDirection
+                ? rb.velocity.x
+                : desiredX;
+        }
 
         float accel = grounded
             ? settings.groundAcceleration

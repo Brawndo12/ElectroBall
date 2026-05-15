@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7169426021507093103}
   m_Layer: 0
   m_Name: DashBubblePrefab
-  m_TagString: Untagged
+  m_TagString: DashBubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

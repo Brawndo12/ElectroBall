@@ -14,4 +14,8 @@ public class VisualSettings : ScriptableObject
 
     [Header("Electricity")]
     public Color electricityColor = new Color(0.4f, 0.9f, 1f, 1f);
+
+    [Header("Goal Slow Motion")]
+    [Range(0.05f, 1f)] public float goalSlowMotionScale = 0.25f;
+    public float goalSlowMotionDuration = 1.5f;
 }

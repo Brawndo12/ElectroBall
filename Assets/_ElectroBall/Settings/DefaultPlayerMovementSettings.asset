@@ -12,23 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47a7c42dd5290994db3833aac09baed0, type: 3}
   m_Name: DefaultPlayerMovementSettings
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 3.75
   groundAcceleration: 60
-  airAcceleration: 8
-  airNoInputSlowdown: 3
-  dashSpeed: 8
+  airAcceleration: 10
+  airNoInputSlowdown: 1.5
+  dashSpeed: 6
   dashCooldown: 0.01
-  dashDuration: 0.1
+  dashDuration: 0.05
   dashBubblePrefab: {fileID: 5789564604036467528, guid: 0a22864dcbb61ec4a8dba53acf19bcd4, type: 3}
   bubbleDiameter: 1
   bubbleGrowthTime: 0.02
   bubblePopFadeTime: 0.5
-  bubbleLifetime: 5
+  bubbleLifetime: 6
   bubbleBallImpulse: 5
-  jumpMultiplier: 0.65
-  slideSpeed: 11
-  slideDuration: 0.2
-  maxOverallSpeed: 20
+  jumpMultiplier: 1
+  slideSpeed: 12
+  slideDuration: 0.4
+  slideBallUpImpulse: 2
+  maxOverallSpeed: 12
   ballLiftRadius: 0.6
   ballLiftHorizontalOffset: 0.35
   ballLiftHorizontalLerp: 0.35

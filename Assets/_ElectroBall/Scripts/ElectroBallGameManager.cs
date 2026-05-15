@@ -26,7 +26,7 @@ public class ElectroBallGameManager : MonoBehaviour
     [SerializeField] private int player2Score;
 
     [Header("Round Timing")]
-    [SerializeField] private float resetDelay = 10.0f;
+    [SerializeField] private float resetDelay = 2.5f;
     //[SerializeField] private float goalSlowMotionScale = 0.25f;
     //[SerializeField] private float goalSlowMotionDuration = 0.6f;
 

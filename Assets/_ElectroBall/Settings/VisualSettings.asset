@@ -16,4 +16,4 @@ MonoBehaviour:
   player2Color: {r: 1, g: 0.1, b: 0.9, a: 1}
   electricityColor: {r: 0.9577841, g: 1, b: 0.39999998, a: 1}
   goalSlowMotionScale: 0.2
-  goalSlowMotionDuration: 7
+  goalSlowMotionDuration: 4

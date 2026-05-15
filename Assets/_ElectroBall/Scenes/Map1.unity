@@ -4008,8 +4008,8 @@ MonoBehaviour:
   lightningZapEffect: {fileID: 385639406}
   player1Score: 0
   player2Score: 0
-  resetDelay: 6
-  visualSettings: {fileID: 0}
+  resetDelay: 2.5
+  visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
 --- !u!4 &2059342214
 Transform:
   m_ObjectHideFlags: 0

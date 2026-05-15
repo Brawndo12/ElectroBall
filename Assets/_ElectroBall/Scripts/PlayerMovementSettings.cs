@@ -31,6 +31,7 @@ public class PlayerMovementSettings : ScriptableObject
     [Header("Slide")]
     public float slideSpeed = 11f;
     public float slideDuration = 0.28f;
+    public float slideBallUpImpulse = 6f;
 
     [Header("Speed Limits")]
     public float maxOverallSpeed = 18f;

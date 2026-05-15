@@ -197,7 +197,40 @@ public class PlayerController2D : MonoBehaviour
 
         dashEndTime = Time.time + settings.dashDuration;
 
-        rb.velocity = dashDirection * settings.dashSpeed;
+        Vector2 velocity = rb.velocity;
+
+        if (dashDirection.x > 0.01f)
+        {
+            if (velocity.x < 0f)
+                velocity.x = 0f;
+
+            velocity.x += settings.dashSpeed;
+        }
+        else if (dashDirection.x < -0.01f)
+        {
+            if (velocity.x > 0f)
+                velocity.x = 0f;
+
+            velocity.x -= settings.dashSpeed;
+        }
+
+        if (dashDirection.y > 0.01f)
+        {
+            if (velocity.y < 0f)
+                velocity.y = 0f;
+
+            velocity.y += settings.dashSpeed;
+        }
+        else if (dashDirection.y < -0.01f)
+        {
+            if (velocity.y > 0f)
+                velocity.y = 0f;
+
+            velocity.y -= settings.dashSpeed;
+        }
+
+        rb.velocity = velocity;
+        ClampSpeed();
     }
 
     private int GetHorizontalActionDirection()
@@ -239,7 +272,8 @@ public class PlayerController2D : MonoBehaviour
             settings.bubbleLifetime,
             settings.bubbleBallImpulse,
             settings.bubblePopFadeTime,
-            bubbleColor
+            bubbleColor,
+            this // --> bubble owner
         );
     }
 
@@ -274,6 +308,22 @@ public class PlayerController2D : MonoBehaviour
             rb.velocity.x,
             jumpSpeed * settings.ballLiftVelocityMultiplier
         );
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!IsSliding)
+            return;
+
+        if (!collision.collider.CompareTag("Ball"))
+            return;
+
+        Rigidbody2D ballRb = collision.collider.attachedRigidbody;
+
+        if (ballRb == null)
+            return;
+
+        ballRb.AddForce(Vector2.up * settings.slideBallUpImpulse, ForceMode2D.Impulse);
     }
 
     private void ClampSpeed()

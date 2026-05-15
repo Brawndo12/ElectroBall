@@ -5,6 +5,7 @@ public class DashBubble : MonoBehaviour
 {
     private CircleCollider2D bubbleCollider;
     private SpriteRenderer spriteRenderer;
+    private PlayerController2D owner;
 
     private float targetDiameter;
     private float growthTime;
@@ -23,7 +24,8 @@ public class DashBubble : MonoBehaviour
         float existTime,
         float impulse,
         float popFadeTime,
-        Color bubbleColor
+        Color bubbleColor,
+        PlayerController2D bubbleOwner
         )
     {
         targetDiameter = diameter;
@@ -78,6 +80,15 @@ public class DashBubble : MonoBehaviour
             direction = Vector2.up;
 
         ballRb.AddForce(direction * ballImpulse, ForceMode2D.Impulse);
+
+        // Other player pop bubble
+        PlayerController2D player = other.GetComponent<PlayerController2D>();
+
+        if (player != null && player != owner)
+        {
+            BeginFade();
+            return;
+        }
 
         BeginFade();
     }

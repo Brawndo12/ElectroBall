@@ -902,10 +902,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cdec67ad2eafe642ab56d99f7ea4cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lightningOrigin: {fileID: 982347934}
+  lightningOrigin: {fileID: 0}
   jitterAmount: 0.25
   segments: 8
   visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
+  zapExplosionPrefab: {fileID: 3819670972046830045, guid: 37c3069a0b7a2c44c8cea1f561480f56, type: 3}
 --- !u!120 &385639407
 LineRenderer:
   serializedVersion: 2
@@ -2410,37 +2411,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &982347933
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 982347934}
-  m_Layer: 0
-  m_Name: LightningOrigin
-  m_TagString: Untagged
-  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &982347934
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 982347933}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.01, y: 4.04, z: 0.03395602}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1007819256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4007,7 +3977,7 @@ MonoBehaviour:
   lightningZapEffect: {fileID: 385639406}
   player1Score: 0
   player2Score: 0
-  resetDelay: 2.5
+  resetDelay: 2
   visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
 --- !u!4 &2059342214
 Transform:
@@ -4256,5 +4226,4 @@ SceneRoots:
   - {fileID: 400364623}
   - {fileID: 1453604942}
   - {fileID: 385639408}
-  - {fileID: 982347934}
   - {fileID: 501580299}

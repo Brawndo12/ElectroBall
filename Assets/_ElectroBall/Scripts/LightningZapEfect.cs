@@ -9,6 +9,7 @@ public class LightningZapEffect : MonoBehaviour
     [SerializeField] private float jitterAmount = 0.25f;
     [SerializeField] private int segments = 8;
     [SerializeField] private VisualSettings visualSettings;
+    [SerializeField] private ParticleSystem zapExplosionPrefab;
 
     private LineRenderer lineRenderer;
     private Coroutine zapRoutine;
@@ -33,6 +34,8 @@ public class LightningZapEffect : MonoBehaviour
         if (zapRoutine != null)
             StopCoroutine(zapRoutine);
 
+        SpawnExplosion(origin);
+
         zapRoutine = StartCoroutine(ZapRoutine(origin, target));
     }
 
@@ -55,6 +58,25 @@ public class LightningZapEffect : MonoBehaviour
         }
 
         lineRenderer.enabled = false;
+    }
+
+    private void SpawnExplosion(Vector3 position)
+    {
+        if (zapExplosionPrefab == null)
+            return;
+
+        ParticleSystem particles = Instantiate(
+            zapExplosionPrefab,
+            position,
+            Quaternion.identity
+        );
+
+        particles.Play();
+
+        Destroy(
+            particles.gameObject,
+            particles.main.duration + particles.main.startLifetime.constantMax
+        );
     }
 
     private void DrawLightning(Vector3 start, Vector3 end)

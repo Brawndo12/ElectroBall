@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   groundAcceleration: 60
-  airAcceleration: 9
+  airAcceleration: 8
   airNoInputSlowdown: 3
-  dashSpeed: 10
-  dashCooldown: 0.02
-  dashDuration: 0.11
+  dashSpeed: 8
+  dashCooldown: 0.01
+  dashDuration: 0.1
   dashBubblePrefab: {fileID: 5789564604036467528, guid: 0a22864dcbb61ec4a8dba53acf19bcd4, type: 3}
   bubbleDiameter: 1
   bubbleGrowthTime: 0.02

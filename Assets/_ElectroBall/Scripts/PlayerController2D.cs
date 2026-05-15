@@ -186,6 +186,8 @@ public class PlayerController2D : MonoBehaviour
 
     private void AirDash()
     {
+        SpawnDashBubble();
+
         Vector2 dashDirection = new Vector2(horizontalInput, verticalInput);
 
         if (dashDirection.sqrMagnitude < 0.01f)
@@ -194,8 +196,6 @@ public class PlayerController2D : MonoBehaviour
         dashDirection.Normalize();
 
         dashEndTime = Time.time + settings.dashDuration;
-
-        SpawnDashBubble();
 
         rb.velocity = dashDirection * settings.dashSpeed;
     }

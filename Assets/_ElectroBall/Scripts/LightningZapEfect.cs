@@ -26,25 +26,30 @@ public class LightningZapEffect : MonoBehaviour
         }
     }
 
-    public void Zap(Transform target)
+    public void Zap(Vector3 origin, Transform target)
     {
         if (target == null) return;
 
         if (zapRoutine != null)
             StopCoroutine(zapRoutine);
 
-        zapRoutine = StartCoroutine(ZapRoutine(target));
+        zapRoutine = StartCoroutine(ZapRoutine(origin, target));
     }
 
-    private IEnumerator ZapRoutine(Transform target)
+    private IEnumerator ZapRoutine(Vector3 origin, Transform target)
     {
         lineRenderer.enabled = true;
 
+        float duration = visualSettings != null
+            ? visualSettings.electricityDuration
+            : 0.35f;
+
         float timer = 0f;
 
-        while (timer < visualSettings.electricityDuration)
+        while (timer < duration)
         {
-            DrawLightning(target);
+            DrawLightning(origin, target.position);
+
             timer += Time.unscaledDeltaTime;
             yield return null;
         }
@@ -52,13 +57,10 @@ public class LightningZapEffect : MonoBehaviour
         lineRenderer.enabled = false;
     }
 
-    private void DrawLightning(Transform target)
+    private void DrawLightning(Vector3 start, Vector3 end)
     {
-        Vector3 start = lightningOrigin != null
-            ? lightningOrigin.position
-            : transform.position;
-
-        Vector3 end = target.position;
+        start.z = 0f;
+        end.z = 0f;
 
         for (int i = 0; i <= segments; i++)
         {

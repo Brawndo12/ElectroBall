@@ -10,6 +10,7 @@ public class GoalZone : MonoBehaviour
     {
         if (!other.CompareTag("Ball")) return;
 
-        ElectroBallGameManager.Instance.GoalScored(scoringPlayer);
+        Vector3 zapOrigin = other.transform.position;
+        ElectroBallGameManager.Instance.GoalScored(scoringPlayer, zapOrigin);
     }
 }

@@ -51,7 +51,7 @@ public class ElectroBallGameManager : MonoBehaviour
         scoreUI?.UpdateScore(player1Score, player2Score);
     }
 
-    public void GoalScored(int scoringPlayer)
+    public void GoalScored(int scoringPlayer, Vector3 zapOrigin)
     {
         if (roundResetting) return;
 
@@ -64,7 +64,7 @@ public class ElectroBallGameManager : MonoBehaviour
         scoreUI?.ShowGoalMessage(scoringPlayer);
 
         Transform losingPlayer = scoringPlayer == 1 ? player2 : player1;
-        lightningZapEffect?.Zap(losingPlayer);
+        lightningZapEffect?.Zap(zapOrigin, losingPlayer);
 
         Debug.Log($"Player 1: {player1Score} | Player 2: {player2Score}");
 

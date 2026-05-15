@@ -903,10 +903,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightningOrigin: {fileID: 982347934}
-  duration: 0.65
   jitterAmount: 0.25
   segments: 8
-  visualSettings: {fileID: 0}
+  visualSettings: {fileID: 11400000, guid: d2b6261e2ee74344eae2e7699978b077, type: 2}
 --- !u!120 &385639407
 LineRenderer:
   serializedVersion: 2

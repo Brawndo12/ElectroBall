@@ -42,7 +42,7 @@ public class LightningZapEffect : MonoBehaviour
 
         float timer = 0f;
 
-        while (timer < visualSettings.electrictyDuration)
+        while (timer < visualSettings.electricityDuration)
         {
             DrawLightning(target);
             timer += Time.unscaledDeltaTime;

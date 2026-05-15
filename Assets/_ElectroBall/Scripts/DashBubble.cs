@@ -33,6 +33,7 @@ public class DashBubble : MonoBehaviour
         lifetime = existTime;
         ballImpulse = impulse;
         fadeTime = popFadeTime;
+        owner = bubbleOwner;
 
         bubbleCollider = GetComponent<CircleCollider2D>();
         bubbleCollider.isTrigger = true;
@@ -69,6 +70,15 @@ public class DashBubble : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (isFading) return;
+
+        PlayerController2D player = other.GetComponent<PlayerController2D>();
+
+        if (player != null && player != owner)
+        {
+            BeginFade();
+            return;
+        }
+
         if (!other.CompareTag("Ball")) return;
 
         Rigidbody2D ballRb = other.attachedRigidbody;
@@ -80,15 +90,6 @@ public class DashBubble : MonoBehaviour
             direction = Vector2.up;
 
         ballRb.AddForce(direction * ballImpulse, ForceMode2D.Impulse);
-
-        // Other player pop bubble
-        PlayerController2D player = other.GetComponent<PlayerController2D>();
-
-        if (player != null && player != owner)
-        {
-            BeginFade();
-            return;
-        }
 
         BeginFade();
     }
